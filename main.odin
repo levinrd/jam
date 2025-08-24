@@ -1,6 +1,7 @@
 package main
 
 import "core:fmt"
+import "core:os"
 import rl "vendor:raylib"
 
 Vec2 :: [2]f32
@@ -17,7 +18,11 @@ main :: proc() {
     rl.SetTargetFPS(60)
 
     grid : Grid
-    fill_grid(&grid)
+    if !os.exists("level.txt") {
+        fill_grid(&grid)
+    } else {
+        load_grid(&grid, "level.txt")
+    }
 
     for !rl.WindowShouldClose() {
         dt := rl.GetFrameTime()
@@ -34,6 +39,18 @@ main :: proc() {
             old := grid.tiles[tile_pos[0]][tile_pos[1]]
             new : Tile = old == .floor ? .wall : .floor
             set_grid_tile(&grid, tile_pos, new)
+        }
+
+        if rl.IsMouseButtonPressed(.RIGHT) {
+            pos := rl.GetMousePosition()
+        }
+
+        if rl.IsKeyPressed(.S) {
+            save_grid(&grid, "level.txt")
+        }
+
+        if rl.IsKeyPressed(.L) {
+            load_grid(&grid, "level.txt")
         }
 
         rl.EndDrawing()
