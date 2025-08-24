@@ -10,18 +10,6 @@ height :: 1000
 
 grid_size :: 10
 
-tile_w :: width / grid_size
-tile_h :: height / grid_size
-
-Tile :: enum {
-    floor,
-    wall,
-}
-
-Grid :: struct {
-    tiles: [grid_size][grid_size]Tile,
-}
-
 main :: proc() {
     rl.InitWindow(width, height, "Socookie")
     defer rl.CloseWindow()
@@ -29,26 +17,23 @@ main :: proc() {
     rl.SetTargetFPS(60)
 
     grid : Grid
-
-    for i in 0..<grid_size {
-        for j in 0..<grid_size {
-            if (i + j) % 2 == 0 {
-                grid.tiles[i][j] = .wall
-            }
-        }
-    }
+    init_grid(&grid)
 
     for !rl.WindowShouldClose() {
         dt := rl.GetFrameTime()
+        mouse_pos : Vec2 = rl.GetMousePosition()
 
         rl.BeginDrawing()
         rl.ClearBackground(rl.BLACK)
-        rl.DrawFPS(10, 10)
-        for i in 0..<grid_size {
-            for j in 0..<grid_size {
-                color : rl.Color = grid.tiles[i][j] == .floor ? rl.BLUE : rl.BLACK
-                rl.DrawRectangle(cast(i32)i * tile_w, cast(i32)j * tile_h, tile_w, tile_h, color)
-            }
+        rl.DrawFPS(10, 1)
+        update_and_draw_grid(&grid)
+
+        if rl.IsMouseButtonPressed(.LEFT) {
+            pos := rl.GetMousePosition()
+            tile_pos := screen_to_grid(pos)
+            old := grid.tiles[tile_pos[0]][tile_pos[1]]
+            new : Tile = old == .floor ? .wall : .floor
+            set_grid_tile(&grid, tile_pos, new)
         }
 
         rl.EndDrawing()
