@@ -19,6 +19,9 @@ main :: proc() {
 
     grid : Grid
     player : Player
+
+    player.pos[0] = 50
+
     if !os.exists("level.txt") {
         fill_grid(&grid)
     } else {
@@ -52,6 +55,9 @@ main :: proc() {
                 load_grid(&grid, "level.txt")
             }
         }
+
+        
+        }
         rl.EndDrawing()
     }
-}
+
