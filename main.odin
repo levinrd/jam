@@ -18,6 +18,7 @@ main :: proc() {
     rl.SetTargetFPS(60)
 
     grid : Grid
+    player : Player
     if !os.exists("level.txt") {
         fill_grid(&grid)
     } else {
@@ -32,6 +33,7 @@ main :: proc() {
         rl.ClearBackground(rl.BLACK)
         rl.DrawFPS(10, 1)
         update_and_draw_grid(&grid)
+        update_and_draw_player(&player)
 
         if rl.IsMouseButtonPressed(.LEFT) {
             pos := rl.GetMousePosition()
@@ -41,10 +43,7 @@ main :: proc() {
             set_grid_tile(&grid, tile_pos, new)
         }
 
-        if rl.IsMouseButtonPressed(.RIGHT) {
-            pos := rl.GetMousePosition()
-        }
-
+       
         if rl.IsKeyPressed(.S) {
             save_grid(&grid, "level.txt")
         }
