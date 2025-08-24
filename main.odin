@@ -43,15 +43,15 @@ main :: proc() {
             set_grid_tile(&grid, tile_pos, new)
         }
 
-       
-        if rl.IsKeyPressed(.S) {
-            save_grid(&grid, "level.txt")
-        }
+        if rl.IsKeyDown(.LEFT_CONTROL) || rl.IsKeyDown(.RIGHT_CONTROL) {
+            if rl.IsKeyPressed(.S) {
+                save_grid(&grid, "level.txt")
+            }
 
-        if rl.IsKeyPressed(.L) {
-            load_grid(&grid, "level.txt")
+            if rl.IsKeyPressed(.L) {
+                load_grid(&grid, "level.txt")
+            }
         }
-
         rl.EndDrawing()
     }
 }
