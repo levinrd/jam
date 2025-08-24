@@ -87,7 +87,6 @@ load_grid :: proc(grid: ^Grid, filepath: string) {
         fmt.eprintln("ERROR: Could not read file", filepath)
         return
     }
-    /* defer os.free(contents.data) */
 
     text := string(contents)
     lines := strings.split_lines(text)
