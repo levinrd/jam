@@ -17,7 +17,7 @@ main :: proc() {
     rl.SetTargetFPS(60)
 
     grid : Grid
-    init_grid(&grid)
+    fill_grid(&grid)
 
     for !rl.WindowShouldClose() {
         dt := rl.GetFrameTime()

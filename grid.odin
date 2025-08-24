@@ -14,7 +14,7 @@ Grid :: struct {
     tiles : [grid_size][grid_size]Tile,
 }
 
-init_grid :: proc(grid: ^Grid) {
+fill_grid :: proc(grid: ^Grid) {
     for i in 0..<grid_size {
         for j in 0..<grid_size {
             if (i + j) % 2 == 0 {
