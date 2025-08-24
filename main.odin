@@ -20,9 +20,14 @@ main :: proc() {
     rl.InitWindow(width, height, "Socookie")
     defer rl.CloseWindow()
     rl.SetExitKey(nil)
+    rl.SetTargetFPS(60)
 
     for !rl.WindowShouldClose() {
+        dt := rl.GetFrameTime()
+
         rl.BeginDrawing()
+        rl.ClearBackground(rl.BLACK)
+        rl.DrawFPS(10, 10)
         rl.EndDrawing()
     }
 }
