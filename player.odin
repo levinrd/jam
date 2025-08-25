@@ -6,31 +6,39 @@ Player :: struct {
    pos : [2]int,
 }
 
-move_player_to :: proc(player: ^Player, pos: [2]int) {
-    player.pos = pos
+Direction :: enum {
+    up,
+    down,
+    left,
+    right,
 }
 
-update_player :: proc(player: ^Player) {
-    if rl.IsKeyPressed(.UP) {
+move_player_dir :: proc(player: ^Player, dir: Direction) {
+    switch dir {
+    case .up:
         if player.pos.y > 0 {
             player.pos.y -= 1
         }
-    }
-    if rl.IsKeyPressed(.DOWN) {
+    case .down:
         if player.pos.y < grid_size-1 {
             player.pos.y += 1
         }
-    }
-    if rl.IsKeyPressed(.LEFT) {
+    case .left:
         if player.pos.x > 0 {
             player.pos.x -= 1
         }
-    }
-    if rl.IsKeyPressed(.RIGHT) {
+    case .right:
         if player.pos.x < grid_size-1 {
             player.pos.x += 1
         }
     }
+}
+
+update_player :: proc(player: ^Player) {
+    if rl.IsKeyPressed(.UP)    do move_player_dir(player, .up)
+    if rl.IsKeyPressed(.DOWN)  do move_player_dir(player, .down)
+    if rl.IsKeyPressed(.LEFT)  do move_player_dir(player, .left)
+    if rl.IsKeyPressed(.RIGHT) do move_player_dir(player, .right)
 }
 
 draw_player :: proc(player: ^Player) {
