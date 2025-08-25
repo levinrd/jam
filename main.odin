@@ -18,25 +18,24 @@ main :: proc() {
     rl.SetTargetFPS(60)
 
     grid : Grid
-    player : Player
-
-    player.pos[0] = 50
-
     if !os.exists("level.txt") {
         fill_grid(&grid)
     } else {
         load_grid(&grid, "level.txt")
     }
 
+    player : Player
+
     for !rl.WindowShouldClose() {
         dt := rl.GetFrameTime()
         mouse_pos : Vec2 = rl.GetMousePosition()
+        update_player(&player)
 
         rl.BeginDrawing()
         rl.ClearBackground(rl.BLACK)
         rl.DrawFPS(10, 1)
         update_and_draw_grid(&grid)
-        update_and_draw_player(&player)
+        draw_player(&player)
 
         if rl.IsMouseButtonPressed(.LEFT) {
             pos := rl.GetMousePosition()
@@ -56,8 +55,6 @@ main :: proc() {
             }
         }
 
-        
-        }
         rl.EndDrawing()
     }
-
+}
