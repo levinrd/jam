@@ -87,13 +87,13 @@ main :: proc() {
 
         update_editor()
 
-        rl.BeginTextureMode(target);
-        rl.BeginMode2D(world_cam);
+        rl.BeginTextureMode(target)
+        rl.BeginMode2D(world_cam)
         rl.ClearBackground(rl.BLACK)
         update_and_draw_grid()
         draw_player()
-        rl.EndMode2D();
-        rl.EndTextureMode();
+        rl.EndMode2D()
+        rl.EndTextureMode()
 
         window_w := rl.GetScreenWidth()
         window_h := rl.GetScreenHeight()
@@ -115,9 +115,9 @@ main :: proc() {
 
         rl.BeginDrawing()
         rl.ClearBackground({ 20, 20, 120, 255 })
-        rl.BeginMode2D(screen_cam);
-        rl.DrawTexturePro(target.texture, source_rec, dest_rec, origin, 0, rl.WHITE);
-        rl.EndMode2D();
+        rl.BeginMode2D(screen_cam)
+        rl.DrawTexturePro(target.texture, source_rec, dest_rec, origin, 0, rl.WHITE)
+        rl.EndMode2D()
         rl.DrawFPS(10, 10)
         draw_editor()
         rl.EndDrawing()
