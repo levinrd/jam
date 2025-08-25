@@ -119,6 +119,7 @@ main :: proc() {
         rl.DrawTexturePro(target.texture, source_rec, dest_rec, origin, 0, rl.WHITE);
         rl.EndMode2D();
         rl.DrawFPS(10, 10)
+        draw_editor()
         rl.EndDrawing()
     }
 }
