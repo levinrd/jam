@@ -1,4 +1,4 @@
-package main
+package game
 
 import rl "vendor:raylib"
 
@@ -49,5 +49,6 @@ update_player :: proc(player: ^Player, grid: ^Grid) {
 
 draw_player :: proc(player: ^Player) {
     center := grid_to_screen_center(player.pos)
-    rl.DrawCircle(cast(i32)center.x, cast(i32)center.y, tile_w/2, rl.RED)
+    /* rl.DrawCircle(cast(i32)center.x, cast(i32)center.y, tile_w/2, rl.RED) */
+    rl.DrawTextureRec(atlas, atlas_textures[.Cookie].rect, center, rl.WHITE)
 }

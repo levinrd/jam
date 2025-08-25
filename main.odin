@@ -1,21 +1,26 @@
-package main
+package game
 
 import "core:fmt"
 import "core:os"
 import rl "vendor:raylib"
 
 Vec2 :: [2]f32
+Rect :: rl.Rectangle
 
 width :: 1000
 height :: 1000
 
 grid_size :: 10
 
+atlas : rl.Texture
+
 main :: proc() {
     rl.InitWindow(width, height, "Socookie")
     defer rl.CloseWindow()
     rl.SetExitKey(nil)
     rl.SetTargetFPS(60)
+
+    atlas = rl.LoadTexture(TEXTURE_ATLAS_FILENAME)
 
     grid : Grid
     if !os.exists("level.txt") {
