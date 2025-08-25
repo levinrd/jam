@@ -48,5 +48,6 @@ update_player :: proc(player: ^Player, grid: ^Grid) {
 }
 
 draw_player :: proc(player: ^Player) {
-    rl.DrawCircle((cast(i32)player.pos[0] * tile_w) + tile_w/2, (cast(i32)player.pos[1] * tile_h) + tile_h/2, tile_w/2, rl.RED)
+    center := grid_to_screen_center(player.pos)
+    rl.DrawCircle(cast(i32)center.x, cast(i32)center.y, tile_w/2, rl.RED)
 }

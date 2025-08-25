@@ -44,10 +44,18 @@ screen_to_grid :: proc(screen_pos: Vec2) -> [2]int {
     }
 }
 
-grid_to_screen :: proc(grid_pos: [2]int) -> Vec2 {
+// NOTE: tl == top left
+grid_to_screen_tl :: proc(grid_pos: [2]int) -> Vec2 {
     return Vec2 {
         cast(f32)grid_pos.x * tile_w,
         cast(f32)grid_pos.y * tile_h,
+    }
+}
+
+grid_to_screen_center :: proc(grid_pos: [2]int) -> Vec2 {
+    return Vec2{
+        cast(f32)grid_pos[0] * tile_w + tile_w/2,
+        cast(f32)grid_pos[1] * tile_h + tile_h/2,
     }
 }
 
