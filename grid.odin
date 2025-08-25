@@ -100,8 +100,10 @@ save_grid :: proc(filepath: string) {
             tile := g.grid.tiles[i][j]
             if tile == .floor {
                 strings.write_byte(&buf, '*')
-            } else {
+            } else if tile == .wall {
                 strings.write_byte(&buf, 'x')
+            } else if tile == .cookie {
+                strings.write_byte(&buf, 'c')
             }
         }
         strings.write_byte(&buf, '\n')
@@ -131,8 +133,10 @@ load_grid :: proc(filepath: string) {
             ch := line[i]
             if ch == 'x' {
                 g.grid.tiles[i][j] = .wall
-            } else {
+            } else if ch == '*' {
                 g.grid.tiles[i][j] = .floor
+            } else if ch == 'c' {
+                g.grid.tiles[i][j] = .cookie
             }
         }
     }
