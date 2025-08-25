@@ -18,22 +18,23 @@ Grid :: struct {
     tiles : [grid_size][grid_size]Tile,
 }
 
-fill_grid :: proc(grid: ^Grid) {
+fill_grid :: proc() {
     for i in 0..<grid_size {
         for j in 0..<grid_size {
             /* if (i + j) % 2 == 0 { */
             /*     grid.tiles[i][j] = .wall */
             /* } */
-            grid.tiles[i][j] = .floor
+            g.grid.tiles[i][j] = .floor
         }
     }
+    g.grid.tiles[8][8] = .cookie
 }
 
-update_and_draw_grid :: proc(grid: ^Grid) {
+update_and_draw_grid :: proc() {
     for i in 0..<grid_size {
         for j in 0..<grid_size {
             pos : Vec2 = { f32(i * tile_w), f32(j * tile_h) }
-            switch grid.tiles[i][j] {
+            switch g.grid.tiles[i][j] {
             case .floor:
                 rl.DrawRectangle(cast(i32)i * tile_w, cast(i32)j * tile_h, tile_w, tile_h, rl.BLACK)
             case .wall:
@@ -83,20 +84,20 @@ grid_to_screen_center :: proc(grid_pos: [2]int) -> Vec2 {
     }
 }
 
-set_grid_tile :: proc(grid: ^Grid, tile_pos: [2]int, tile: Tile) {
+set_grid_tile :: proc(tile_pos: [2]int, tile: Tile) {
     x := tile_pos[0]
     y := tile_pos[1]
     if x >= 0 && x < grid_size && y >= 0 && y < grid_size {
-        grid.tiles[x][y] = tile
+        g.grid.tiles[x][y] = tile
     }
 }
 
-save_grid :: proc(grid: ^Grid, filepath: string) {
+save_grid :: proc(filepath: string) {
     buf := strings.builder_make()
 
     for j in 0..<grid_size {
         for i in 0..<grid_size {
-            tile := grid.tiles[i][j]
+            tile := g.grid.tiles[i][j]
             if tile == .floor {
                 strings.write_byte(&buf, '*')
             } else {
@@ -114,7 +115,7 @@ save_grid :: proc(grid: ^Grid, filepath: string) {
     }
 }
 
-load_grid :: proc(grid: ^Grid, filepath: string) {
+load_grid :: proc(filepath: string) {
     contents, ok := os.read_entire_file(filepath)
     if !ok {
         fmt.eprintln("ERROR: Could not read file", filepath)
@@ -129,9 +130,9 @@ load_grid :: proc(grid: ^Grid, filepath: string) {
         for i in 0..<min(grid_size, len(line)) {
             ch := line[i]
             if ch == 'x' {
-                grid.tiles[i][j] = .wall
+                g.grid.tiles[i][j] = .wall
             } else {
-                grid.tiles[i][j] = .floor
+                g.grid.tiles[i][j] = .floor
             }
         }
     }

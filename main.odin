@@ -18,12 +18,23 @@ grid_size :: 10
 
 atlas : rl.Texture
 
+Game :: struct {
+    player: Player,
+    grid: Grid,
+}
+g : Game
+
 main :: proc() {
     rl.SetConfigFlags({.WINDOW_RESIZABLE, .VSYNC_HINT})
     rl.InitWindow(screen_width, screen_height, "Socookie")
     defer rl.CloseWindow()
     rl.SetExitKey(nil)
     rl.SetTargetFPS(60)
+
+    g = {
+        grid = {},
+        player = {},
+    }
 
     atlas = rl.LoadTexture(TEXTURE_ATLAS_FILENAME)
 
@@ -51,45 +62,36 @@ main :: proc() {
     camera_x : f32 = 0
     camera_y : f32 = 0
 
-    grid : Grid
-    if !os.exists("level.txt") {
-        fill_grid(&grid)
-    } else {
-        load_grid(&grid, "level.txt")
-    }
 
-    player : Player
+    if !os.exists("level.txt") {
+        fill_grid()
+    } else {
+        load_grid("level.txt")
+    }
 
     for !rl.WindowShouldClose() {
         dt := rl.GetFrameTime()
 
         screen_cam.target = { camera_x, camera_y }
 
-
-        update_player(&player, &grid)
+        update_player()
 
         if rl.IsKeyDown(.LEFT_CONTROL) || rl.IsKeyDown(.RIGHT_CONTROL) {
             if rl.IsKeyPressed(.S) {
-                save_grid(&grid, "level.txt")
+                save_grid("level.txt")
             }
             if rl.IsKeyPressed(.L) {
-                load_grid(&grid, "level.txt")
+                load_grid("level.txt")
             }
         }
 
-        if rl.IsMouseButtonPressed(.LEFT) {
-            pos := screen_to_virtual(rl.GetMousePosition())
-            tile_pos := screen_to_grid(pos)
-            old := grid.tiles[tile_pos[0]][tile_pos[1]]
-            new : Tile = old == .floor ? .wall : .floor
-            set_grid_tile(&grid, tile_pos, new)
-        }
+        update_editor()
 
         rl.BeginTextureMode(target);
         rl.BeginMode2D(world_cam);
         rl.ClearBackground(rl.BLACK)
-        update_and_draw_grid(&grid)
-        draw_player(&player)
+        update_and_draw_grid()
+        draw_player()
         rl.EndMode2D();
         rl.EndTextureMode();
 
