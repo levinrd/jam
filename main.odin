@@ -33,7 +33,10 @@ main :: proc() {
 
     g = {
         grid = {},
-        player = {},
+        player = {
+            pos = { 0, 0 },
+            anim = animation_create(.Player_Idle_S)
+        },
     }
 
     atlas = rl.LoadTexture(TEXTURE_ATLAS_FILENAME)
