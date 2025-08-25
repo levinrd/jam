@@ -31,11 +31,14 @@ main :: proc() {
         mouse_pos : Vec2 = rl.GetMousePosition()
         update_player(&player, &grid)
 
-        rl.BeginDrawing()
-        rl.ClearBackground(rl.BLACK)
-        rl.DrawFPS(10, 1)
-        update_and_draw_grid(&grid)
-        draw_player(&player)
+        if rl.IsKeyDown(.LEFT_CONTROL) || rl.IsKeyDown(.RIGHT_CONTROL) {
+            if rl.IsKeyPressed(.S) {
+                save_grid(&grid, "level.txt")
+            }
+            if rl.IsKeyPressed(.L) {
+                load_grid(&grid, "level.txt")
+            }
+        }
 
         if rl.IsMouseButtonPressed(.LEFT) {
             pos := rl.GetMousePosition()
@@ -45,16 +48,11 @@ main :: proc() {
             set_grid_tile(&grid, tile_pos, new)
         }
 
-        if rl.IsKeyDown(.LEFT_CONTROL) || rl.IsKeyDown(.RIGHT_CONTROL) {
-            if rl.IsKeyPressed(.S) {
-                save_grid(&grid, "level.txt")
-            }
-
-            if rl.IsKeyPressed(.L) {
-                load_grid(&grid, "level.txt")
-            }
-        }
-
+        rl.BeginDrawing()
+        rl.ClearBackground(rl.WHITE)
+        update_and_draw_grid(&grid)
+        draw_player(&player)
+        rl.DrawFPS(10, 10)
         rl.EndDrawing()
     }
 }
