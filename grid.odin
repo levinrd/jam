@@ -11,6 +11,7 @@ tile_h :: virtual_screen_height / grid_size
 Tile :: enum {
     floor,
     wall,
+    cookie,
 }
 
 Grid :: struct {
@@ -31,12 +32,14 @@ fill_grid :: proc(grid: ^Grid) {
 update_and_draw_grid :: proc(grid: ^Grid) {
     for i in 0..<grid_size {
         for j in 0..<grid_size {
+            pos : Vec2 = { f32(i * tile_w), f32(j * tile_h) }
             switch grid.tiles[i][j] {
             case .floor:
                 rl.DrawRectangle(cast(i32)i * tile_w, cast(i32)j * tile_h, tile_w, tile_h, rl.BLACK)
             case .wall:
-                pos : Vec2 = { f32(i * tile_w), f32(j * tile_h) }
                 rl.DrawTextureRec(atlas, atlas_textures[.Wall].rect, pos, rl.WHITE)
+            case .cookie:
+                rl.DrawTextureRec(atlas, atlas_textures[.Cookie].rect, pos, rl.WHITE)
             }
         }
     }
@@ -49,15 +52,24 @@ screen_to_grid :: proc(screen_pos: Vec2) -> [2]int {
     }
 }
 
-screen_to_virtual :: proc(screen_pos: Vec2) -> Vec2 {
-    return Vec2{
-        screen_pos.x * f32(virtual_screen_width) / f32(screen_width),
-        screen_pos.y * f32(virtual_screen_height) / f32(screen_height),
-    }
+screen_to_virtual :: proc(pos: rl.Vector2) -> Vec2 {
+    window_w := rl.GetScreenWidth()
+    window_h := rl.GetScreenHeight()
+
+    scale := f32(min(window_w / virtual_screen_width, window_h / virtual_screen_height))
+    draw_w := f32(virtual_screen_width) * scale
+    draw_h := f32(virtual_screen_height) * scale
+
+    offset_x := (f32(window_w) - draw_w) * 0.5
+    offset_y := (f32(window_h) - draw_h) * 0.5
+
+    vx := (pos.x - offset_x) / scale
+    vy := (pos.y - offset_y) / scale
+
+    return Vec2{vx, vy}
 }
 
-// NOTE: tl == top left
-grid_to_screen_tl :: proc(grid_pos: [2]int) -> Vec2 {
+grid_to_screen_top_left :: proc(grid_pos: [2]int) -> Vec2 {
     return Vec2 {
         cast(f32)grid_pos.x * tile_w,
         cast(f32)grid_pos.y * tile_h,
