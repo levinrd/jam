@@ -20,9 +20,10 @@ Grid :: struct {
 fill_grid :: proc(grid: ^Grid) {
     for i in 0..<grid_size {
         for j in 0..<grid_size {
-            if (i + j) % 2 == 0 {
-                grid.tiles[i][j] = .wall
-            }
+            /* if (i + j) % 2 == 0 { */
+            /*     grid.tiles[i][j] = .wall */
+            /* } */
+            grid.tiles[i][j] = .floor
         }
     }
 }

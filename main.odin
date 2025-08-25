@@ -29,7 +29,7 @@ main :: proc() {
     for !rl.WindowShouldClose() {
         dt := rl.GetFrameTime()
         mouse_pos : Vec2 = rl.GetMousePosition()
-        update_player(&player)
+        update_player(&player, &grid)
 
         rl.BeginDrawing()
         rl.ClearBackground(rl.BLACK)
