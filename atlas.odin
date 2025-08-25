@@ -27,11 +27,12 @@ LETTERS_IN_FONT :: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz12345678
 
 // A generated square in the atlas you can use with rl.SetShapesTexture to make
 // raylib shapes such as rl.DrawRectangleRec() use the atlas.
-SHAPES_TEXTURE_RECT :: Rect {31, 0, 10, 10}
+SHAPES_TEXTURE_RECT :: Rect {64, 0, 10, 10}
 
 Texture_Name :: enum {
 	None,
 	Cookie,
+	Wall,
 }
 
 Atlas_Texture :: struct {
@@ -51,7 +52,8 @@ Atlas_Texture :: struct {
 
 atlas_textures: [Texture_Name]Atlas_Texture = {
 	.None = {},
-	.Cookie = { rect = {0, 0, 30, 30}, offset_top = 1, offset_right = 1, offset_bottom = 1, offset_left = 1, document_size = {32, 32}, duration = 0.100},
+	.Cookie = { rect = {33, 0, 30, 30}, offset_top = 1, offset_right = 1, offset_bottom = 1, offset_left = 1, document_size = {32, 32}, duration = 0.100},
+	.Wall = { rect = {0, 0, 32, 32}, offset_top = 0, offset_right = 0, offset_bottom = 0, offset_left = 0, document_size = {32, 32}, duration = 0.100},
 }
 
 Animation_Name :: enum {

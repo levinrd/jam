@@ -1,4 +1,4 @@
-jam: main.odin grid.odin player.odin
+jam: main.odin grid.odin player.odin atlas.png
 	odin build . -error-pos-style=unix -debug
 
 atlas.png: textures

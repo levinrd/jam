@@ -5,8 +5,8 @@ import "core:os"
 import "core:strings"
 import rl "vendor:raylib"
 
-tile_w :: width / grid_size
-tile_h :: height / grid_size
+tile_w :: virtual_screen_width / grid_size
+tile_h :: virtual_screen_height / grid_size
 
 Tile :: enum {
     floor,
@@ -31,8 +31,13 @@ fill_grid :: proc(grid: ^Grid) {
 update_and_draw_grid :: proc(grid: ^Grid) {
     for i in 0..<grid_size {
         for j in 0..<grid_size {
-            color : rl.Color = grid.tiles[i][j] == .floor ? rl.BLUE : rl.BLACK
-            rl.DrawRectangle(cast(i32)i * tile_w, cast(i32)j * tile_h, tile_w, tile_h, color)
+            switch grid.tiles[i][j] {
+            case .floor:
+                rl.DrawRectangle(cast(i32)i * tile_w, cast(i32)j * tile_h, tile_w, tile_h, rl.BLACK)
+            case .wall:
+                pos : Vec2 = { f32(i * tile_w), f32(j * tile_h) }
+                rl.DrawTextureRec(atlas, atlas_textures[.Wall].rect, pos, rl.WHITE)
+            }
         }
     }
 }
@@ -41,6 +46,13 @@ screen_to_grid :: proc(screen_pos: Vec2) -> [2]int {
     return [2]int {
         cast(int)(screen_pos.x) / tile_w,
         cast(int)(screen_pos.y) / tile_h,
+    }
+}
+
+screen_to_virtual :: proc(screen_pos: Vec2) -> Vec2 {
+    return Vec2{
+        screen_pos.x * f32(virtual_screen_width) / f32(screen_width),
+        screen_pos.y * f32(virtual_screen_height) / f32(screen_height),
     }
 }
 
