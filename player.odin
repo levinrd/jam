@@ -65,34 +65,56 @@ move_player_dir :: proc(dir: Direction) {
 update_player :: proc() {
     dt := rl.GetFrameTime()
 
-    if !g.player.moving {
-        if rl.IsKeyPressed(.UP)    do move_player_dir(.north)
-        if rl.IsKeyPressed(.DOWN)  do move_player_dir(.south)
-        if rl.IsKeyPressed(.LEFT)  do move_player_dir(.west)
-        if rl.IsKeyPressed(.RIGHT) do move_player_dir(.east)
-    }
-
     if g.player.moving {
-        speed : f32 = 5.0
+        // Interpolate ongoing movement
+        speed : f32 = 5.0 // tiles per second
         g.player.interp += dt * speed
 
         if g.player.interp >= 1 {
+            // Snap to target
             g.player.pos = g.player.target_pos
             g.player.moving = false
 
-            idle_anim : Animation_Name
-            switch g.player.facing {
-            case .north: idle_anim = .Player_Idle_N
-            case .south: idle_anim = .Player_Idle_S
-            case .west:  idle_anim = .Player_Idle_W
-            case .east:  idle_anim = .Player_Idle_E
+            // Check if same key is still down -> chain next move
+            next_dir : Direction
+            has_input := false
+
+            if rl.IsKeyDown(.UP) {
+                next_dir = .north; has_input = true
+            } else if rl.IsKeyDown(.DOWN) {
+                next_dir = .south; has_input = true
+            } else if rl.IsKeyDown(.LEFT) {
+                next_dir = .west; has_input = true
+            } else if rl.IsKeyDown(.RIGHT) {
+                next_dir = .east; has_input = true
             }
-            g.player.anim = animation_create(idle_anim)
+
+            if has_input {
+                move_player_dir(next_dir)
+            } else {
+                // No input: switch to idle animation
+                idle_anim : Animation_Name
+                switch g.player.facing {
+                case .north: idle_anim = .Player_Idle_N
+                case .south: idle_anim = .Player_Idle_S
+                case .west:  idle_anim = .Player_Idle_W
+                case .east:  idle_anim = .Player_Idle_E
+                }
+                g.player.anim = animation_create(idle_anim)
+            }
         }
+    } else {
+        // Not moving: check if a key is held to start moving
+        if rl.IsKeyDown(.UP)    do move_player_dir(.north)
+        if rl.IsKeyDown(.DOWN)  do move_player_dir(.south)
+        if rl.IsKeyDown(.LEFT)  do move_player_dir(.west)
+        if rl.IsKeyDown(.RIGHT) do move_player_dir(.east)
     }
 
+    // Always tick animation timer
     animation_update(&g.player.anim, dt)
 }
+
 
 
 draw_player :: proc() {
