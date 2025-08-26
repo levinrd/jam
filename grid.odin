@@ -104,6 +104,8 @@ load_grid :: proc(filepath: string) {
         return
     }
 
+    defer delete(contents)
+
     text := string(contents)
     lines := strings.split_lines(text)
 
