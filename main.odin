@@ -39,6 +39,8 @@ main :: proc() {
         },
     }
 
+    init_editor()
+
     atlas = rl.LoadTexture(TEXTURE_ATLAS_FILENAME)
 
     world_cam : rl.Camera2D = {
