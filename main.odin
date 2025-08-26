@@ -18,9 +18,16 @@ grid_size :: 10
 
 atlas : rl.Texture
 
+Game_State :: enum {
+    menu,
+    playing,
+}
+
 Game :: struct {
     player: Player,
     grid: Grid,
+    state: Game_State,
+    dt: f32
 }
 g : Game
 
@@ -37,6 +44,7 @@ main :: proc() {
             pos = { 0, 0 },
             anim = animation_create(.Player_Idle_S)
         },
+        state = .menu,
     }
 
     init_editor()
@@ -56,7 +64,7 @@ main :: proc() {
 
     source_rec : Rect = { 0, 0, f32(target.texture.width), f32(-target.texture.height) };
     dest_rec : Rect = {
-        -virtual_ratio,
+            -virtual_ratio,
         -virtual_ratio,
         f32(screen_width) + (virtual_ratio*2),
         f32(screen_height) + (virtual_ratio*2),
@@ -67,7 +75,6 @@ main :: proc() {
     camera_x : f32 = 0
     camera_y : f32 = 0
 
-
     if !os.exists("level.txt") {
         fill_grid()
     } else {
@@ -75,55 +82,83 @@ main :: proc() {
     }
 
     for !rl.WindowShouldClose() {
-        dt := rl.GetFrameTime()
+
+        g.dt = rl.GetFrameTime()
         screen_width = rl.GetScreenWidth()
         screen_height = rl.GetScreenHeight()
 
-        screen_cam.target = { camera_x, camera_y }
-
-        update_player()
-
-        if rl.IsKeyDown(.LEFT_CONTROL) || rl.IsKeyDown(.RIGHT_CONTROL) {
-            if rl.IsKeyPressed(.S) {
-                save_grid("level.txt")
-            }
-            if rl.IsKeyPressed(.L) {
-                load_grid("level.txt")
-            }
-        }
-
-        update_editor()
-
-        rl.BeginTextureMode(target)
-        rl.BeginMode2D(world_cam)
-        rl.ClearBackground(rl.BLACK)
-        update_and_draw_grid()
-        draw_player()
-        rl.EndMode2D()
-        rl.EndTextureMode()
-
-        scale := f32(min(screen_width / virtual_screen_width, screen_height / virtual_screen_height))
-
-        draw_w := f32(virtual_screen_width) * scale
-        draw_h := f32(virtual_screen_height) * scale
-
-        offset_x := (f32(screen_width) - draw_w) * 0.5
-        offset_y := (f32(screen_height) - draw_h) * 0.5
-
-        dest_rec := rl.Rectangle{
-            x = offset_x,
-            y = offset_y,
-            width = draw_w,
-            height = draw_h,
-        }
-
         rl.BeginDrawing()
-        rl.ClearBackground({ 20, 20, 120, 255 })
-        rl.BeginMode2D(screen_cam)
-        rl.DrawTexturePro(target.texture, source_rec, dest_rec, origin, 0, rl.WHITE)
-        rl.EndMode2D()
-        rl.DrawFPS(10, 10)
-        draw_editor()
-        rl.EndDrawing()
+        defer rl.EndDrawing()
+
+        switch g.state {
+        case .menu:
+            action := menu_update_and_draw()
+            #partial switch action {
+            case .play:
+                g.state = .playing
+            case .quit:
+                rl.CloseWindow()
+            }
+            /* if menu_update_and_draw() { */
+            /*     if !os.exists("level.txt") { */
+            /*         fill_grid() */
+            /*     } else { */
+            /*         load_grid("level.txt") */
+            /*     } */
+            /*     g.state = .playing */
+            /* } */
+
+        case .playing:
+
+            if rl.IsKeyPressed(.ESCAPE) {
+                g.state = .menu
+                continue
+            }
+
+            screen_cam.target = { camera_x, camera_y }
+
+            update_player()
+
+            if rl.IsKeyDown(.LEFT_CONTROL) || rl.IsKeyDown(.RIGHT_CONTROL) {
+                if rl.IsKeyPressed(.S) {
+                    save_grid("level.txt")
+                }
+                if rl.IsKeyPressed(.L) {
+                    load_grid("level.txt")
+                }
+            }
+
+            update_editor()
+
+            rl.BeginTextureMode(target)
+            rl.BeginMode2D(world_cam)
+            rl.ClearBackground(rl.BLACK)
+            update_and_draw_grid()
+            draw_player()
+            rl.EndMode2D()
+            rl.EndTextureMode()
+
+            scale := f32(min(screen_width / virtual_screen_width, screen_height / virtual_screen_height))
+
+            draw_w := f32(virtual_screen_width) * scale
+            draw_h := f32(virtual_screen_height) * scale
+
+            offset_x := (f32(screen_width) - draw_w) * 0.5
+            offset_y := (f32(screen_height) - draw_h) * 0.5
+
+            dest_rec := rl.Rectangle{
+                x = offset_x,
+                y = offset_y,
+                width = draw_w,
+                height = draw_h,
+            }
+
+            rl.ClearBackground({ 20, 20, 120, 255 })
+            rl.BeginMode2D(screen_cam)
+            rl.DrawTexturePro(target.texture, source_rec, dest_rec, origin, 0, rl.WHITE)
+            rl.EndMode2D()
+            rl.DrawFPS(10, 10)
+            draw_editor()
+        }
     }
 }
