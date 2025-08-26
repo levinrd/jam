@@ -2,6 +2,10 @@ package game
 
 import rl "vendor:raylib"
 
+Editor :: struct {
+    ct: Tile,
+}
+
 editor_on := false
 
 update_editor :: proc() {

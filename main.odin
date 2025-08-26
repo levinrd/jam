@@ -7,8 +7,8 @@ import rl "vendor:raylib"
 Vec2 :: [2]f32
 Rect :: rl.Rectangle
 
-screen_width :: 1000
-screen_height :: 1000
+screen_width : i32 = 1000
+screen_height : i32 = 1000
 
 virtual_screen_width  :: 320
 virtual_screen_height :: 320
@@ -56,8 +56,8 @@ main :: proc() {
     dest_rec : Rect = {
         -virtual_ratio,
         -virtual_ratio,
-        screen_width + (virtual_ratio*2),
-        screen_height + (virtual_ratio*2),
+        f32(screen_width) + (virtual_ratio*2),
+        f32(screen_height) + (virtual_ratio*2),
     }
 
     origin : Vec2 = { 0, 0 }
@@ -74,6 +74,8 @@ main :: proc() {
 
     for !rl.WindowShouldClose() {
         dt := rl.GetFrameTime()
+        screen_width = rl.GetScreenWidth()
+        screen_height = rl.GetScreenHeight()
 
         screen_cam.target = { camera_x, camera_y }
 
@@ -98,16 +100,13 @@ main :: proc() {
         rl.EndMode2D()
         rl.EndTextureMode()
 
-        window_w := rl.GetScreenWidth()
-        window_h := rl.GetScreenHeight()
-
-        scale := f32(min(window_w / virtual_screen_width, window_h / virtual_screen_height))
+        scale := f32(min(screen_width / virtual_screen_width, screen_height / virtual_screen_height))
 
         draw_w := f32(virtual_screen_width) * scale
         draw_h := f32(virtual_screen_height) * scale
 
-        offset_x := (f32(window_w) - draw_w) * 0.5
-        offset_y := (f32(window_h) - draw_h) * 0.5
+        offset_x := (f32(screen_width) - draw_w) * 0.5
+        offset_y := (f32(screen_height) - draw_h) * 0.5
 
         dest_rec := rl.Rectangle{
             x = offset_x,
