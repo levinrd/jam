@@ -3,8 +3,8 @@ package game
 import rl "vendor:raylib"
 
 Player :: struct {
-    pos        : [2]int,
-    target_pos : [2]int,
+    pos        : Vec2i,
+    target_pos : Vec2i,
     interp     : f32,
     moving     : bool,
     facing     : Direction,

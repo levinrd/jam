@@ -39,7 +39,7 @@ draw_tile :: proc(pos: Vec2, tile: Tile) {
     }
 }
 
-draw_tile_in_grid :: proc(grid_pos: [2]int, tile: Tile) {
+draw_tile_in_grid :: proc(grid_pos: Vec2i, tile: Tile) {
     pos := Vec2{
         f32(grid_pos[0] * tile_w),
         f32(grid_pos[1] * tile_h),

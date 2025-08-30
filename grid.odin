@@ -24,13 +24,13 @@ fill_grid :: proc() {
 update_and_draw_grid :: proc() {
     for i in 0..<grid_size {
         for j in 0..<grid_size {
-            draw_tile_in_grid([2]int{i, j}, g.grid.tiles[i][j])
+            draw_tile_in_grid({i, j}, g.grid.tiles[i][j])
         }
     }
 }
 
-screen_to_grid :: proc(screen_pos: Vec2) -> [2]int {
-    return [2]int {
+screen_to_grid :: proc(screen_pos: Vec2) -> Vec2i {
+    return {
         cast(int)(screen_pos.x) / tile_w,
         cast(int)(screen_pos.y) / tile_h,
     }
@@ -50,21 +50,21 @@ screen_to_virtual :: proc(pos: rl.Vector2) -> Vec2 {
     return Vec2{vx, vy}
 }
 
-grid_to_screen_top_left :: proc(grid_pos: [2]int) -> Vec2 {
+grid_to_screen_top_left :: proc(grid_pos: Vec2i) -> Vec2 {
     return Vec2 {
         cast(f32)grid_pos.x * tile_w,
         cast(f32)grid_pos.y * tile_h,
     }
 }
 
-grid_to_screen_center :: proc(grid_pos: [2]int) -> Vec2 {
-    return Vec2{
+grid_to_screen_center :: proc(grid_pos: Vec2i) -> Vec2 {
+    return {
         cast(f32)grid_pos[0] * tile_w + tile_w/2,
         cast(f32)grid_pos[1] * tile_h + tile_h/2,
     }
 }
 
-set_grid_tile :: proc(tile_pos: [2]int, tile: Tile) {
+set_grid_tile :: proc(tile_pos: Vec2i, tile: Tile) {
     x := tile_pos[0]
     y := tile_pos[1]
     if x >= 0 && x < grid_size && y >= 0 && y < grid_size {

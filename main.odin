@@ -5,6 +5,7 @@ import "core:os"
 import rl "vendor:raylib"
 
 Vec2 :: [2]f32
+Vec2i :: [2]int
 Rect :: rl.Rectangle
 
 screen_width : i32 = 1000
