@@ -100,14 +100,6 @@ main :: proc() {
             case .quit:
                 rl.CloseWindow()
             }
-            /* if menu_update_and_draw() { */
-            /*     if !os.exists("level.txt") { */
-            /*         fill_grid() */
-            /*     } else { */
-            /*         load_grid("level.txt") */
-            /*     } */
-            /*     g.state = .playing */
-            /* } */
 
         case .playing:
 

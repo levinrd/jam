@@ -25,7 +25,6 @@ quit_button_rect : rl.Rectangle = {
 menu_update_and_draw :: proc() -> Menu_Action {
     rl.ClearBackground({ 30, 30, 60, 255 })
 
-    // Draw title
     rl.DrawTexturePro(
         atlas,
         atlas_textures[.Title].rect,
@@ -35,7 +34,6 @@ menu_update_and_draw :: proc() -> Menu_Action {
         rl.WHITE,
     )
 
-    // --- Play Button ---
     rl.DrawRectangleRec(play_button_rect, { 200, 200, 200, 255 })
     rl.DrawRectangleLinesEx(play_button_rect, 2, rl.BLACK)
     rl.DrawText("Play",
@@ -44,7 +42,6 @@ menu_update_and_draw :: proc() -> Menu_Action {
         20,
         rl.BLACK)
 
-    // --- Quit Button ---
     rl.DrawRectangleRec(quit_button_rect, { 200, 200, 200, 255 })
     rl.DrawRectangleLinesEx(quit_button_rect, 2, rl.BLACK)
     rl.DrawText("Quit",
@@ -55,13 +52,10 @@ menu_update_and_draw :: proc() -> Menu_Action {
 
     if rl.IsMouseButtonPressed(.LEFT) {
         mouse := rl.GetMousePosition()
-        if rl.CheckCollisionPointRec(mouse, play_button_rect) {
-            return .play
-        }
-        if rl.CheckCollisionPointRec(mouse, quit_button_rect) {
-            return .quit
-        }
+        if rl.CheckCollisionPointRec(mouse, play_button_rect) do return .play
+        if rl.CheckCollisionPointRec(mouse, quit_button_rect) do return .quit
     }
+    if rl.IsKeyPressed(.ENTER) { return .play }
 
     return .none
 }
